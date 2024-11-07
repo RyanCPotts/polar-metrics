@@ -8,7 +8,6 @@ const App = () => {
     <div>
       <h1>Google Civic Information</h1>
       <CivicData address="1600 Amphitheatre Parkway, Mountain View, CA" />
-      <ProPublicaData />
     </div>
   );
 };
