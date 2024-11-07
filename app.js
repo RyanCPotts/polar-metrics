@@ -1,13 +1,12 @@
 // App.js
 import React from 'react';
-import CivicData from './CivicData';
-// import ProPublicaData from './ProPublicaData';
+import GoogleCivicData from './GoogleCivicData';  // Correct import
 
 const App = () => {
   return (
     <div>
       <h1>Google Civic Information</h1>
-      <CivicData address="1600 Amphitheatre Parkway, Mountain View, CA" />
+      <GoogleCivicData address="1600 Amphitheatre Parkway, Mountain View, CA" />  {/* Correct usage of component */}
     </div>
   );
 };
