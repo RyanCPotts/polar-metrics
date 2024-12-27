@@ -6,7 +6,8 @@ const CivicData = ({ address }) => {
 
   useEffect(() => {
     const getCivicData = async () => {
-      const apiKey = 'YOUR_API_KEY';  // Replace with your actual API key
+      const apiKey = process.env.REACT_APP_GOOGLE_CIVIC_API_KEY;
+
       const endpoint = `https://civicinfo.googleapis.com/civicinfo/v2/representatives?address=${address}&key=${apiKey}`;
 
       try {
