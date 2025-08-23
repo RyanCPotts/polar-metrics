@@ -143,3 +143,28 @@ polar-metrics/
 
 **Current Status**: 🎯 **DEMO READY** - MVP complete with stunning visual design
 **Next Milestone**: 🔌 **API INTEGRATION** - Replace demo data with live government APIs
+
+___
+
+CONGRESS.GOV
+
+🏛️ What This API Service Provides:
+Legislative Data:
+
+getRecentBills() - Latest bills introduced
+getBillDetails() - Full details of specific bills
+searchBills() - Search bills by keyword
+
+Members of Congress:
+
+getMembers() - All current Congress members
+getMemberDetails() - Detailed info on specific members
+getMembersByState() - Filter members by state
+
+Voting & Committees:
+
+getRecentVotes() - Recent congressional votes
+getCommittees() - Committee information
+getNominations() - Presidential nominations
+
+___

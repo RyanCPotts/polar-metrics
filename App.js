@@ -1,15 +1,21 @@
 import React from 'react';
-import GoogleCivicData from './GoogleCivicData';  // Correct import
-import ProPublicaData from './ProPublicaDataAPI';  // Correct import to ProPublicaDataAPI.js
+import GoogleCivicDataAPI from './Components/GoogleCivicDataAPI';  // Fixed import path
+import ProPublicaDataAPI from './Components/ProPublicaDataAPI';    // Fixed import path
 
 const App = () => {
   return (
     <div>
-      <h1>Google Civic Information</h1>
-      <GoogleCivicData address="1600 Amphitheatre Parkway, Mountain View, CA 94043" />  {/* Correct usage of component */}
+      <h1>Polar Metrics - Political Data Dashboard</h1>
       
-      <h1>ProPublica Data</h1>
-      <ProPublicaData />  {/* Correct usage without address prop */}
+      <section>
+        <h2>Google Civic Information</h2>
+        <GoogleCivicDataAPI address="1600 Amphitheatre Parkway, Mountain View, CA 94043" />
+      </section>
+      
+      <section>
+        <h2>ProPublica Congressional Data</h2>
+        <ProPublicaDataAPI />
+      </section>
     </div>
   );
 };
