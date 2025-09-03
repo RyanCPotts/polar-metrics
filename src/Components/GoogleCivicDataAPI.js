@@ -34,5 +34,4 @@ const CivicData = ({ address }) => {
     </div>
   );
 };
-
-export default CivicData;
+export default CivicData; googleCivicDataAPI;
