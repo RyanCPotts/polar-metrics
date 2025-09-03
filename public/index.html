@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POLAR METRICS :: POLITICAL INTELLIGENCE MATRIX</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Courier+Prime:wght@400;700&display=swap');
+        
+        :root {
+            --matrix-green: #00ff41;
+            --matrix-dark-green: #008f11;
+            --matrix-bg: #0d0d0d;
+            --matrix-terminal: #001a00;
+            --matrix-red: #ff0040;
+            --matrix-gold: #ffd700;
+            --matrix-blue: #00a4ff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: var(--matrix-bg);
+            color: var(--matrix-green);
+            font-family: 'Orbitron', monospace;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Matrix Rain Background */
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+        }
+        
+        /* Header */
+        .header {
+            background: rgba(0, 0, 0, 0.9);
+            border-bottom: 2px solid var(--matrix-green);
+            padding: 1rem;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+        
+        .header h1 {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 900;
+            text-shadow: 0 0 20px var(--matrix-green);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        .system-status {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            font-family: 'Courier Prime', monospace;
+        }
+        
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--matrix-green);
+            animation: pulse 1s infinite;
+        }
+        
+        /* Main Container */
+        .container {
+            margin-top: 120px;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            min-height: calc(100vh - 120px);
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            background: rgba(0, 26, 0, 0.8);
+            border: 1px solid var(--matrix-dark-green);
+            border-radius: 10px;
+            padding: 1.5rem;
+            backdrop-filter: blur(5px);
+            height: fit-content;
+        }
+        
+        .api-section {
+            margin-bottom: 2rem;
+        }
+        
+        .api-section h3 {
+            color: var(--matrix-gold);
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            border-bottom: 1px solid var(--matrix-dark-green);
+            padding-bottom: 0.5rem;
+        }
+        
+        .api-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--matrix-dark-green);
+            color: var(--matrix-green);
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-family: 'Courier Prime', monospace;
+            border-radius: 5px;
+            font-size: 0.8rem;
+        }
+        
+        .api-input:focus {
+            outline: none;
+            border-color: var(--matrix-green);
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+        }
+        
+        .connect-btn {
+            width: 100%;
+            background: linear-gradient(45deg, var(--matrix-dark-green), var(--matrix-green));
+            border: none;
+            color: black;
+            padding: 0.8rem;
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            border-radius: 5px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+        }
+        
+        .connect-btn:hover {
+            box-shadow: 0 0 20px var(--matrix-green);
+            transform: translateY(-2px);
+        }
+        
+        .location-controls {
+            margin-top: 2rem;
+        }
+        
+        .geo-input {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        /* Main Dashboard */
+        .dashboard {
+            display: grid;
+            grid-template-rows: auto 1fr;
+            gap: 1.5rem;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .metric-card {
+            background: rgba(0, 26, 0, 0.6);
+            border: 1px solid var(--matrix-green);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s;
+        }
+        
+        .metric-card:hover {
+            border-color: var(--matrix-gold);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+        }
+        
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--matrix-gold);
+            text-shadow: 0 0 10px var(--matrix-gold);
+            margin-bottom: 0.5rem;
+        }
+        
+        .metric-label {
+            font-size: 0.9rem;
+            color: var(--matrix-green);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* Data Panels */
+        .data-panels {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        
+        .panel {
+            background: rgba(0, 26, 0, 0.8);
+            border: 1px solid var(--matrix-dark-green);
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .panel-header {
+            background: rgba(0, 255, 65, 0.1);
+            padding: 1rem;
+            border-bottom: 1px solid var(--matrix-dark-green);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .panel-content {
+            padding: 1.5rem;
+            height: 300px;
+            overflow-y: auto;
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.8rem;
+            line-height: 1.4;
+        }
+        
+        .data-stream {
+            margin-bottom: 0.5rem;
+            opacity: 0.8;
+        }
+        
+        .data-stream:hover {
+            opacity: 1;
+            color: var(--matrix-gold);
+        }
+        
+        /* Terminal */
+        .terminal {
+            grid-column: 1 / -1;
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid var(--matrix-green);
+            border-radius: 10px;
+            margin-top: 1rem;
+        }
+        
+        .terminal-header {
+            background: rgba(0, 255, 65, 0.2);
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            border-bottom: 1px solid var(--matrix-green);
+        }
+        
+        .terminal-content {
+            padding: 1rem;
+            height: 200px;
+            overflow-y: auto;
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.8rem;
+        }
+        
+        .terminal-line {
+            margin-bottom: 0.3rem;
+        }
+        
+        .prompt {
+            color: var(--matrix-gold);
+        }
+        
+        /* Animations */
+        @keyframes glow {
+            from { text-shadow: 0 0 20px var(--matrix-green); }
+            to { text-shadow: 0 0 30px var(--matrix-green), 0 0 40px var(--matrix-green); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        
+        @keyframes dataFlow {
+            0% { transform: translateY(20px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        
+        .data-flow {
+            animation: dataFlow 0.5s ease-out;
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--matrix-terminal);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--matrix-green);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--matrix-gold);
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .data-panels {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas class="matrix-bg" id="matrixCanvas"></canvas>
+    
+    <header class="header">
+        <h1>POLAR METRICS :: POLITICAL INTELLIGENCE MATRIX</h1>
+        <div class="system-status">
+            <div class="status-item">
+                <div class="status-dot"></div>
+                <span>CONGRESS API: <span id="congressStatus">DISCONNECTED</span></span>
+            </div>
+            <div class="status-item">
+                <div class="status-dot"></div>
+                <span>PROPUBLICA: <span id="propublicaStatus">DISCONNECTED</span></span>
+            </div>
+            <div class="status-item">
+                <div class="status-dot"></div>
+                <span>CIVIC API: <span id="civicStatus">DISCONNECTED</span></span>
+            </div>
+            <div class="status-item">
+                <div class="status-dot"></div>
+                <span>GEO LOCK: <span id="geoStatus">INACTIVE</span></span>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <aside class="sidebar">
+            <div class="api-section">
+                <h3>🏛️ CONGRESS.GOV API</h3>
+                <input type="password" class="api-input" id="congressKey" placeholder="API Key">
+                <button class="connect-btn" onclick="connectCongressAPI()">CONNECT</button>
+            </div>
+            
+            <div class="api-section">
+                <h3>📊 PROPUBLICA API</h3>
+                <input type="password" class="api-input" id="propublicaKey" placeholder="API Key">
+                <button class="connect-btn" onclick="connectPropublicaAPI()">CONNECT</button>
+            </div>
+            
+            <div class="api-section">
+                <h3>🗳️ GOOGLE CIVIC API</h3>
+                <input type="password" class="api-input" id="civicKey" placeholder="API Key">
+                <button class="connect-btn" onclick="connectCivicAPI()">CONNECT</button>
+            </div>
+            
+            <div class="location-controls">
+                <h3>📍 GEO TARGETING</h3>
+                <div class="geo-input">
+                    <input type="text" class="api-input" id="zipCode" placeholder="ZIP Code" style="width: 60%;">
+                    <button class="connect-btn" onclick="setGeolocation()" style="width: 35%;">LOCK</button>
+                </div>
+                <input type="text" class="api-input" id="address" placeholder="Full Address (Optional)">
+            </div>
+        </aside>
+        
+        <main class="dashboard">
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value" id="activeReps">--</div>
+                    <div class="metric-label">Active Representatives</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="activeBills">--</div>
+                    <div class="metric-label">Active Bills</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="votingScore">--</div>
+                    <div class="metric-label">Voting Efficiency %</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="transparency">--</div>
+                    <div class="metric-label">Transparency Index</div>
+                </div>
+            </div>
+            
+            <div class="data-panels">
+                <div class="panel">
+                    <div class="panel-header">📋 Recent Congressional Activity</div>
+                    <div class="panel-content" id="congressData">
+                        <div class="data-stream">>>> Initializing Congress.gov connection...</div>
+                        <div class="data-stream">>>> Awaiting API authentication...</div>
+                        <div class="data-stream">>>> Ready for data stream...</div>
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <div class="panel-header">💰 ProPublica Transparency Data</div>
+                    <div class="panel-content" id="propublicaData">
+                        <div class="data-stream">>>> Initializing ProPublica connection...</div>
+                        <div class="data-stream">>>> Awaiting API authentication...</div>
+                        <div class="data-stream">>>> Ready for data stream...</div>
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <div class="panel-header">🗳️ Civic Information Stream</div>
+                    <div class="panel-content" id="civicData">
+                        <div class="data-stream">>>> Initializing Civic API connection...</div>
+                        <div class="data-stream">>>> Awaiting API authentication...</div>
+                        <div class="data-stream">>>> Ready for data stream...</div>
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <div class="panel-header">🎯 Geo-Political Analysis</div>
+                    <div class="panel-content" id="geoData">
+                        <div class="data-stream">>>> Geolocation services offline...</div>
+                        <div class="data-stream">>>> Enter ZIP code to activate...</div>
+                        <div class="data-stream">>>> Ready for location lock...</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="terminal">
+                <div class="terminal-header">SYSTEM TERMINAL :: POLAR-METRICS-v1.0</div>
+                <div class="terminal-content" id="terminal">
+                    <div class="terminal-line"><span class="prompt">polar@matrix:~$</span> Initializing political intelligence matrix...</div>
+                    <div class="terminal-line"><span class="prompt">polar@matrix:~$</span> Loading congressional data modules...</div>
+                    <div class="terminal-line"><span class="prompt">polar@matrix:~$</span> Establishing secure API connections...</div>
+                    <div class="terminal-line"><span class="prompt">polar@matrix:~$</span> System ready. Awaiting user authentication.</div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        // Matrix rain effect
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()';
+        const letterArray = letters.split('');
+        
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        
+        const drops = [];
+        for(let x = 0; x < columns; x++) {
+            drops[x] = 1;
+        }
+        
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(13, 13, 13, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = '#00ff41';
+            ctx.font = fontSize + 'px monospace';
+            
+            for(let i = 0; i < drops.length; i++) {
+                const text = letterArray[Math.floor(Math.random() * letterArray.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                
+                if(drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                
+                drops[i]++;
+            }
+        }
+        
+        setInterval(drawMatrix, 50);
+        
+        // Resize canvas on window resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+        
+        // API Connection Functions
+        const apiConnections = {
+            congress: false,
+            propublica: false,
+            civic: false
+        };
+        
+        function logToTerminal(message) {
+            const terminal = document.getElementById('terminal');
+            const newLine = document.createElement('div');
+            newLine.className = 'terminal-line data-flow';
+            newLine.innerHTML = `<span class="prompt">polar@matrix:~$</span> ${message}`;
+            terminal.appendChild(newLine);
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+        
+        function updateStatus(api, status) {
+            document.getElementById(`${api}Status`).textContent = status;
+            if (status === 'CONNECTED') {
+                document.getElementById(`${api}Status`).style.color = '#00ff41';
+            } else if (status === 'ERROR') {
+                document.getElementById(`${api}Status`).style.color = '#ff0040';
+            }
+        }
+        
+        async function connectCongressAPI() {
+            const apiKey = document.getElementById('congressKey').value;
+            if (!apiKey) {
+                logToTerminal('ERROR: Congress API key required');
+                updateStatus('congress', 'ERROR');
+                return;
+            }
+            
+            logToTerminal('Connecting to Congress.gov API...');
+            updateStatus('congress', 'CONNECTING...');
+            
+            try {
+                // Simulate API connection
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                apiConnections.congress = true;
+                updateStatus('congress', 'CONNECTED');
+                logToTerminal('Congress.gov API connection established');
+                
+                // Simulate data loading
+                loadCongressData();
+                updateMetrics();
+                
+            } catch (error) {
+                updateStatus('congress', 'ERROR');
+                logToTerminal(`Congress API Error: ${error.message}`);
+            }
+        }
+        
+        async function connectPropublicaAPI() {
+            const apiKey = document.getElementById('propublicaKey').value;
+            if (!apiKey) {
+                logToTerminal('ERROR: ProPublica API key required');
+                updateStatus('propublica', 'ERROR');
+                return;
+            }
+            
+            logToTerminal('Connecting to ProPublica API...');
+            updateStatus('propublica', 'CONNECTING...');
+            
+            try {
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                apiConnections.propublica = true;
+                updateStatus('propublica', 'CONNECTED');
+                logToTerminal('ProPublica API connection established');
+                
+                loadPropublicaData();
+                updateMetrics();
+                
+            } catch (error) {
+                updateStatus('propublica', 'ERROR');
+                logToTerminal(`ProPublica API Error: ${error.message}`);
+            }
+        }
+        
+        async function connectCivicAPI() {
+            const apiKey = document.getElementById('civicKey').value;
+            if (!apiKey) {
+                logToTerminal('ERROR: Google Civic API key required');
+                updateStatus('civic', 'ERROR');
+                return;
+            }
+            
+            logToTerminal('Connecting to Google Civic Information API...');
+            updateStatus('civic', 'CONNECTING...');
+            
+            try {
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                apiConnections.civic = true;
+                updateStatus('civic', 'CONNECTED');
+                logToTerminal('Google Civic API connection established');
+                
+                loadCivicData();
+                updateMetrics();
+                
+            } catch (error) {
+                updateStatus('civic', 'ERROR');
+                logToTerminal(`Civic API Error: ${error.message}`);
+            }
+        }
+        
+        function setGeolocation() {
+            const zipCode = document.getElementById('zipCode').value;
+            if (!zipCode) {
+                logToTerminal('ERROR: ZIP code required for geo-targeting');
+                return;
+            }
+            
+            logToTerminal(`Setting geolocation lock: ${zipCode}`);
+            updateStatus('geo', 'ACTIVE');
+            
+            // Simulate geo data loading
+            loadGeoData(zipCode);
+        }
+        
+        function loadCongressData() {
+            const panel = document.getElementById('congressData');
+            const sampleData = [
+                'H.R.2847: Infrastructure Investment Act - PASSED',
+                'S.1234: Healthcare Reform Bill - IN COMMITTEE',
+                'H.R.5678: Education Funding Act - FLOOR VOTE PENDING',
+                'S.9101: Climate Action Bill - SUBCOMMITTEE REVIEW',
+                'H.R.1122: Veterans Affairs Reform - SIGNED INTO LAW'
+            ];
+            
+            panel.innerHTML = '';
+            sampleData.forEach((item, index) => {
+                setTimeout(() => {
+                    const div = document.createElement('div');
+                    div.className = 'data-stream data-flow';
+                    div.textContent = `>>> ${item}`;
+                    panel.appendChild(div);
+                }, index * 300);
+            });
+        }
+        
+        function loadPropublicaData() {
+            const panel = document.getElementById('propublicaData');
+            const sampleData = [
+                'Lobbying Disclosure: Tech Industry +$2.3M this quarter',
+                'Campaign Finance: PAC contributions up 15% vs last cycle',
+                'Congressional Expenditures: Travel costs increased 8%',
+                'Transparency Score: 73% compliance rate',
+                'Ethics Violations: 3 new cases under review'
+            ];
+            
+            panel.innerHTML = '';
+            sampleData.forEach((item, index) => {
+                setTimeout(() => {
+                    const div = document.createElement('div');
+                    div.className = 'data-stream data-flow';
+                    div.textContent = `>>> ${item}`;
+                    panel.appendChild(div);
+                }, index * 400);
+            });
+        }
+        
+        function loadCivicData() {
+            const panel = document.getElementById('civicData');
+            const sampleData = [
+                'Next Election: November 5, 2024 - General Election',
+                'Polling Locations: 847 active sites in district',
+                'Voter Registration: 89% eligible population registered',
+                'Ballot Initiatives: 4 measures on upcoming ballot',
+                'Early Voting: Begins October 15, 2024'
+            ];
+            
+            panel.innerHTML = '';
+            sampleData.forEach((item, index) => {
+                setTimeout(() => {
+                    const div = document.createElement('div');
+                    div.className = 'data-stream data-flow';
+                    div.textContent = `>>> ${item}`;
+                    panel.appendChild(div);
+                }, index * 500);
+            });
+        }
+        
+        function loadGeoData(zipCode) {
+            const panel = document.getElementById('geoData');
+            const sampleData = [
+                `Congressional District: ${zipCode} -> CD-${Math.floor(Math.random() * 15) + 1}`,
+                'Representative: Jane Smith (D) - 3rd term',
+                'Senator 1: John Doe (R) - 2nd term',
+                'Senator 2: Mary Johnson (D) - 1st term',
+                `Voter Turnout 2022: ${Math.floor(Math.random() * 30) + 60}%`
+            ];
+            
+            panel.innerHTML = '';
+            sampleData.forEach((item, index) => {
+                setTimeout(() => {
+                    const div = document.createElement('div');
+                    div.className = 'data-stream data-flow';
+                    div.textContent = `>>> ${item}`;
+                    panel.appendChild(div);
+                }, index * 300);
+            });
+        }
+        
+        function updateMetrics() {
+            const connectedAPIs = Object.values(apiConnections).filter(Boolean).length;
+            
+            // Simulate updating metrics based on connected APIs
+            if (apiConnections.congress) {
+                document.getElementById('activeReps').textContent = Math.floor(Math.random() * 435) + 100;
+                document.getElementById('activeBills').textContent = Math.floor(Math.random() * 1000) + 500;
+            }
+            
+            if (apiConnections.propublica) {
+                document.getElementById('transparency').textContent = Math.floor(Math.random() * 30) + 70;
+            }
+            
+            if (apiConnections.civic) {
+                document.getElementById('votingScore').textContent = Math.floor(Math.random() * 20) + 75;
+            }
+        }
+        
+        // Initialize with some demo terminal messages
+        setTimeout(() => {
+            logToTerminal('Welcome to Polar Metrics Political Intelligence System');
+            logToTerminal('Enter API keys to establish secure connections');
+            logToTerminal('Use geo-targeting for localized political data');
+        }, 1000);
+    </script>
+</body>
+</html>
