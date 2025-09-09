@@ -1,6 +1,6 @@
 import React from 'react';
 import GoogleCivicDataAPI from './Components/GoogleCivicDataAPI';  // Fixed import path
-import ProPublicaDataAPI from './Components/ProPublicaDataAPI';    // Fixed import path
+import OpenStatesAPI from './Components/OpenStatesAPI';    // Fixed import path
 
 const App = () => {
   return (
@@ -13,8 +13,8 @@ const App = () => {
       </section>
       
       <section>
-        <h2>ProPublica Congressional Data</h2>
-        <ProPublicaDataAPI />
+        <h2>Open States</h2>
+        <OpenStatesAPI />
       </section>
     </div>
   );
