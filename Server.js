@@ -1,3 +1,4 @@
+// Server.js
 const express = require('express');
 const path = require('path');
 const axios = require('axios');
@@ -18,16 +19,20 @@ app.use(express.json());
 // 1. Google Civic Information API
 const GOOGLE_CIVIC_API_KEY = process.env.GOOGLE_CIVIC_API_KEY;
 
-app.get('/api/google-civic/:address', async (req, res) => {
+app.get('/api/google-civic', async (req, res) => {
   try {
-    const { address } = req.params;
+    const { location } = req.query;
+
+    if (!location) {
+      return res.status(400).json({ error: 'No location provided' });
+    }
 
     const response = await axios.get(
       'https://www.googleapis.com/civicinfo/v2/representatives',
       {
         params: {
           key: GOOGLE_CIVIC_API_KEY,
-          address: address
+          address: location
         }
       }
     );
@@ -47,9 +52,13 @@ app.get('/api/google-civic/:address', async (req, res) => {
 // 2. Open States API
 const OPEN_STATES_API_KEY = process.env.OPEN_STATES_API_KEY;
 
-app.get('/api/openstates/:state', async (req, res) => {
+app.get('/api/openstates', async (req, res) => {
   try {
-    const { state } = req.params;
+    const { state } = req.query;
+
+    if (!state) {
+      return res.status(400).json({ error: 'No state provided' });
+    }
 
     const response = await axios.get('https://v3.openstates.org/bills', {
       params: {
@@ -94,14 +103,18 @@ app.get('/api/govtrack/bills', async (req, res) => {
   }
 });
 
-// Serve React App
+// --------------------------
+// Serve React App (Production)
+// --------------------------
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, 'frontend/build')));
+
   app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'frontend/build', 'index.html'));
   });
 }
 
+// --------------------------
 app.listen(PORT, () => {
   console.log(`🚀 Backend server running on http://localhost:${PORT}`);
 });

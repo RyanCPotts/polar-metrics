@@ -1,48 +1,46 @@
-import React, { useEffect, useState } from 'react';
-import getCivicData from './Components/GoogleCivicDataAPI';
-import getOpenStatesData from './Components/OpenStatesData';
-import getGovTrackBills from './Components/CongressGovAPI';
-import extractStateFromAddress from './Components/LocalityService';
+import React, { useState } from 'react';
+import GoogleCivicDataAPI from './Components/GoogleCivicDataAPI';
+import OpenStatesData from './Components/OpenStatesData';
+import CongressGovAPI from './Components/CongressGovAPI';
 import './styles.css';
 
-export default function App() {
-  const [address, setAddress] = useState('1600 Pennsylvania Avenue NW, Washington DC');
-  const [civicData, setCivicData] = useState(null);
-  const [openStatesData, setOpenStatesData] = useState(null);
-  const [govTrackData, setGovTrackData] = useState(null);
-
-  useEffect(() => {
-    async function fetchData() {
-      const civic = await getCivicData(address);
-      setCivicData(civic);
-
-      const state = extractStateFromAddress(address);
-      const openStates = await getOpenStatesData(state);
-      setOpenStatesData(openStates);
-
-      const govTrack = await getGovTrackBills();
-      setGovTrackData(govTrack);
-    }
-
-    fetchData();
-  }, [address]);
+function App() {
+  const [location, setLocation] = useState('');
+  const [state, setState] = useState('');
 
   return (
-    <div className="App">
-      <h1>PolarMetrics MVP</h1>
-      <section>
-        <h2>Address: {address}</h2>
-        <h3>Google Civic Data:</h3>
-        <pre>{civicData ? JSON.stringify(civicData, null, 2) : 'Loading...'}</pre>
+    <div className="app-container">
+      <h1>🖥️ Polar Metrics</h1>
+
+      <section className="input-section">
+        <div>
+          <label>Location (ZIP / City / Address): </label>
+          <input
+            type="text"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            placeholder="e.g., 73120 or OKC, OK"
+          />
+        </div>
+
+        <div>
+          <label>State (for OpenStates API): </label>
+          <input
+            type="text"
+            value={state}
+            onChange={(e) => setState(e.target.value.toUpperCase())}
+            placeholder="e.g., OK"
+          />
+        </div>
       </section>
-      <section>
-        <h3>Open States Data:</h3>
-        <pre>{openStatesData ? JSON.stringify(openStatesData, null, 2) : 'Loading...'}</pre>
-      </section>
-      <section>
-        <h3>GovTrack Bills:</h3>
-        <pre>{govTrackData ? JSON.stringify(govTrackData, null, 2) : 'Loading...'}</pre>
+
+      <section className="api-section">
+        <GoogleCivicDataAPI location={location} />
+        <OpenStatesData state={state} />
+        <CongressGovAPI />
       </section>
     </div>
   );
 }
+
+export default App;

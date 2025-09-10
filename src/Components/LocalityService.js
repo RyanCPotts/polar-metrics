@@ -1,4 +1,12 @@
-export default function extractStateFromAddress(address) {
-  const match = address.match(/\b[A-Z]{2}\b/);
-  return match ? match[0] : 'DC';
-}
+const LocalityService = {
+  extractState: (civicData) => {
+    try {
+      const state = civicData.normalizedInput.state;
+      return state || "DC";
+    } catch {
+      return "DC";
+    }
+  },
+};
+
+export default LocalityService;
