@@ -1,6 +1,6 @@
 import React from 'react';
 import GoogleCivicDataAPI from './Components/GoogleCivicDataAPI';  // Fixed import path
-import OpenStatesAPI from './Components/OpenStatesAPI';    // Fixed import path
+import OpenStatesData from './Components/OpenStatesData';    // Fixed import path
 
 const App = () => {
   return (
@@ -9,12 +9,12 @@ const App = () => {
       
       <section>
         <h2>Google Civic Information</h2>
-        <GoogleCivicDataAPI address="1600 Amphitheatre Parkway, Mountain View, CA 94043" />
+        <GoogleCivicDataAPI />
       </section>
       
       <section>
         <h2>Open States</h2>
-        <OpenStatesAPI />
+        <OpenStatesData />
       </section>
     </div>
   );

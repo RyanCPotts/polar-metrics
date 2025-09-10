@@ -4,351 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>POLAR METRICS :: POLITICAL INTELLIGENCE MATRIX</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Courier+Prime:wght@400;700&display=swap');
-        
-        :root {
-            --matrix-green: #00ff41;
-            --matrix-dark-green: #008f11;
-            --matrix-bg: #0d0d0d;
-            --matrix-terminal: #001a00;
-            --matrix-red: #ff0040;
-            --matrix-gold: #ffd700;
-            --matrix-blue: #00a4ff;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            background: var(--matrix-bg);
-            color: var(--matrix-green);
-            font-family: 'Orbitron', monospace;
-            overflow-x: hidden;
-            position: relative;
-        }
-        
-        /* Matrix Rain Background */
-        .matrix-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            opacity: 0.1;
-        }
-        
-        /* Header */
-        .header {
-            background: rgba(0, 0, 0, 0.9);
-            border-bottom: 2px solid var(--matrix-green);
-            padding: 1rem;
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-            backdrop-filter: blur(10px);
-        }
-        
-        .header h1 {
-            text-align: center;
-            font-size: 2rem;
-            font-weight: 900;
-            text-shadow: 0 0 20px var(--matrix-green);
-            animation: glow 2s ease-in-out infinite alternate;
-        }
-        
-        .system-status {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 0.5rem;
-            font-size: 0.8rem;
-            font-family: 'Courier Prime', monospace;
-        }
-        
-        .status-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--matrix-green);
-            animation: pulse 1s infinite;
-        }
-        
-        /* Main Container */
-        .container {
-            margin-top: 120px;
-            padding: 2rem;
-            display: grid;
-            grid-template-columns: 300px 1fr;
-            gap: 2rem;
-            min-height: calc(100vh - 120px);
-        }
-        
-        /* Sidebar */
-        .sidebar {
-            background: rgba(0, 26, 0, 0.8);
-            border: 1px solid var(--matrix-dark-green);
-            border-radius: 10px;
-            padding: 1.5rem;
-            backdrop-filter: blur(5px);
-            height: fit-content;
-        }
-        
-        .api-section {
-            margin-bottom: 2rem;
-        }
-        
-        .api-section h3 {
-            color: var(--matrix-gold);
-            margin-bottom: 1rem;
-            font-size: 1rem;
-            border-bottom: 1px solid var(--matrix-dark-green);
-            padding-bottom: 0.5rem;
-        }
-        
-        .api-input {
-            width: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            border: 1px solid var(--matrix-dark-green);
-            color: var(--matrix-green);
-            padding: 0.5rem;
-            margin-bottom: 0.5rem;
-            font-family: 'Courier Prime', monospace;
-            border-radius: 5px;
-            font-size: 0.8rem;
-        }
-        
-        .api-input:focus {
-            outline: none;
-            border-color: var(--matrix-green);
-            box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
-        }
-        
-        .connect-btn {
-            width: 100%;
-            background: linear-gradient(45deg, var(--matrix-dark-green), var(--matrix-green));
-            border: none;
-            color: black;
-            padding: 0.8rem;
-            font-family: 'Orbitron', monospace;
-            font-weight: 700;
-            border-radius: 5px;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s;
-        }
-        
-        .connect-btn:hover {
-            box-shadow: 0 0 20px var(--matrix-green);
-            transform: translateY(-2px);
-        }
-        
-        .location-controls {
-            margin-top: 2rem;
-        }
-        
-        .geo-input {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-        
-        .state-selector {
-            width: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            border: 1px solid var(--matrix-dark-green);
-            color: var(--matrix-green);
-            padding: 0.5rem;
-            margin-bottom: 0.5rem;
-            font-family: 'Courier Prime', monospace;
-            border-radius: 5px;
-            font-size: 0.8rem;
-        }
-        
-        .state-selector:focus {
-            outline: none;
-            border-color: var(--matrix-green);
-            box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
-        }
-        
-        /* Main Dashboard */
-        .dashboard {
-            display: grid;
-            grid-template-rows: auto 1fr;
-            gap: 1.5rem;
-        }
-        
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        
-        .metric-card {
-            background: rgba(0, 26, 0, 0.6);
-            border: 1px solid var(--matrix-green);
-            border-radius: 10px;
-            padding: 1.5rem;
-            text-align: center;
-            backdrop-filter: blur(5px);
-            transition: all 0.3s;
-        }
-        
-        .metric-card:hover {
-            border-color: var(--matrix-gold);
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
-        }
-        
-        .metric-value {
-            font-size: 2.5rem;
-            font-weight: 900;
-            color: var(--matrix-gold);
-            text-shadow: 0 0 10px var(--matrix-gold);
-            margin-bottom: 0.5rem;
-        }
-        
-        .metric-label {
-            font-size: 0.9rem;
-            color: var(--matrix-green);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        /* Data Panels */
-        .data-panels {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-        }
-        
-        .panel {
-            background: rgba(0, 26, 0, 0.8);
-            border: 1px solid var(--matrix-dark-green);
-            border-radius: 10px;
-            backdrop-filter: blur(5px);
-        }
-        
-        .panel-header {
-            background: rgba(0, 255, 65, 0.1);
-            padding: 1rem;
-            border-bottom: 1px solid var(--matrix-dark-green);
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .panel-content {
-            padding: 1.5rem;
-            height: 300px;
-            overflow-y: auto;
-            font-family: 'Courier Prime', monospace;
-            font-size: 0.8rem;
-            line-height: 1.4;
-        }
-        
-        .data-stream {
-            margin-bottom: 0.5rem;
-            opacity: 0.8;
-        }
-        
-        .data-stream:hover {
-            opacity: 1;
-            color: var(--matrix-gold);
-        }
-        
-        /* Terminal */
-        .terminal {
-            grid-column: 1 / -1;
-            background: rgba(0, 0, 0, 0.9);
-            border: 2px solid var(--matrix-green);
-            border-radius: 10px;
-            margin-top: 1rem;
-        }
-        
-        .terminal-header {
-            background: rgba(0, 255, 65, 0.2);
-            padding: 0.5rem 1rem;
-            font-size: 0.8rem;
-            border-bottom: 1px solid var(--matrix-green);
-        }
-        
-        .terminal-content {
-            padding: 1rem;
-            height: 200px;
-            overflow-y: auto;
-            font-family: 'Courier Prime', monospace;
-            font-size: 0.8rem;
-        }
-        
-        .terminal-line {
-            margin-bottom: 0.3rem;
-        }
-        
-        .prompt {
-            color: var(--matrix-gold);
-        }
-        
-        /* Animations */
-        @keyframes glow {
-            from { text-shadow: 0 0 20px var(--matrix-green); }
-            to { text-shadow: 0 0 30px var(--matrix-green), 0 0 40px var(--matrix-green); }
-        }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
-        
-        @keyframes dataFlow {
-            0% { transform: translateY(20px); opacity: 0; }
-            100% { transform: translateY(0); opacity: 1; }
-        }
-        
-        .data-flow {
-            animation: dataFlow 0.5s ease-out;
-        }
-        
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: var(--matrix-terminal);
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: var(--matrix-green);
-            border-radius: 4px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--matrix-gold);
-        }
-        
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .container {
-                grid-template-columns: 1fr;
-            }
-            
-            .data-panels {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+<link rel="stylesheet" href="styles.css">
+
 </head>
 <body>
     <canvas class="matrix-bg" id="matrixCanvas"></canvas>
@@ -386,7 +43,7 @@
             <div class="api-section">
                 <h3>🗳️ OPEN STATES API</h3>
                 <input type="password" class="api-input" id="openStatesKey" placeholder="API Key">
-                <button class="connect-btn" onclick="connectOpenStatesAPI()">CONNECT</button>
+                <button class="connect-btn" onclick="connectOpenStatesData()">CONNECT</button>
             </div>
             
             <div class="api-section">
@@ -397,7 +54,7 @@
             
             <div class="location-controls">
                 <h3>📍 STATE TARGETING</h3>
-                <select class="state-selector" id="stateSelect">
+                <select class="state-selector" id="stateSelect" name="state">
                     <option value="ok">Oklahoma</option>
                     <option value="tx">Texas</option>
                     <option value="ca">California</option>
@@ -410,7 +67,7 @@
                     <option value="nc">North Carolina</option>
                 </select>
                 <div class="geo-input">
-                    <input type="text" class="api-input" id="zipCode" placeholder="ZIP Code" style="width: 60%;">
+                    <input type="text" class="api-input" id="zipCode" name="zipCode" placeholder="ZIP Code" style="width: 60%;">
                     <button class="connect-btn" onclick="setGeolocation()" style="width: 35%;">LOCK</button>
                 </div>
                 <input type="text" class="api-input" id="address" placeholder="Full Address (Optional)">
@@ -487,6 +144,107 @@
         </main>
     </div>
     
+    <!-- Load your LocalityService as a module -->
+    <script type="module">
+        // Import your LocalityService
+        import localityService from './LocalityService.js';
+        
+        // Make it globally available
+        window.localityService = localityService;
+        
+        // Real API-powered functions
+        window.loadCivicData = async function(address = null) {
+            const panel = document.getElementById('civicData');
+            
+            panel.innerHTML = '<div class="data-stream">>>> Loading civic data...</div>';
+            
+            try {
+                if (!address) {
+                    const stateInput = document.getElementById('stateSelect').value;
+                    const zipInput = document.getElementById('zipCode').value;
+                    
+                    if (!stateInput || !zipInput) {
+                        panel.innerHTML = '<div class="data-stream">>>> Please enter a state and ZIP code first.</div>';
+                        return;
+                    }
+                    
+                    address = `${zipInput}, ${stateInput}`;
+                }
+                
+                const civicData = await localityService.getCivicData(address);
+                const displayData = [];
+                
+                if (civicData.normalizedInput) {
+                    displayData.push(`>>> Location: ${civicData.normalizedInput.city}, ${civicData.normalizedInput.state} ${civicData.normalizedInput.zip}`);
+                }
+                
+                if (civicData.elections && civicData.elections.length > 0) {
+                    civicData.elections.forEach(election => {
+                        displayData.push(`>>> Election: ${election.name} - ${new Date(election.electionDay).toLocaleDateString()}`);
+                    });
+                } else {
+                    displayData.push('>>> Election info: Check your local election office for upcoming elections');
+                }
+                
+                if (civicData.offices) {
+                    displayData.push(`>>> Elected Offices: ${civicData.offices.length} offices found`);
+                }
+                
+                if (civicData.officials) {
+                    displayData.push(`>>> Current Officials: ${civicData.officials.length} representatives found`);
+                }
+                
+                if (civicData.offices && civicData.officials) {
+                    displayData.push('>>> --- CURRENT OFFICIALS ---');
+                    civicData.offices.slice(0, 5).forEach((office) => {
+                        if (office.officialIndices && office.officialIndices.length > 0) {
+                            const officialIndex = office.officialIndices[0];
+                            const official = civicData.officials[officialIndex];
+                            if (official) {
+                                const party = official.party ? ` (${official.party})` : '';
+                                displayData.push(`>>> ${office.name}: ${official.name}${party}`);
+                            }
+                        }
+                    });
+                }
+                
+                if (displayData.length > 0) {
+                    panel.innerHTML = displayData.map(item => `<div class="data-stream data-flow">${item}</div>`).join('');
+                } else {
+                    panel.innerHTML = '<div class="data-stream">>>> No civic data available for this location.</div>';
+                }
+                
+            } catch (error) {
+                console.error('Error loading civic data:', error);
+                panel.innerHTML = `
+                    <div class="data-stream">>>> Error loading civic data: ${error.message}</div>
+                    <div class="data-stream">>>> Please check your Google Civic API key and try again.</div>
+                `;
+            }
+        };
+        
+        window.loadGeoData = async function(state, zipCode) {
+            const panel = document.getElementById('geoData');
+            
+            panel.innerHTML = '<div class="data-stream">>>> Loading political data...</div>';
+            
+            try {
+                const address = `${zipCode}, ${state}`;
+                const localData = await localityService.getLocalPoliticalData(address);
+                const displayData = localityService.formatForDisplay(localData);
+                
+                panel.innerHTML = displayData.map(item => `<div class="data-stream data-flow">>>> ${item}</div>`).join('');
+                
+            } catch (error) {
+                console.error('Error loading political data:', error);
+                panel.innerHTML = `
+                    <div class="data-stream">>>> Error loading political data: ${error.message}</div>
+                    <div class="data-stream">>>> Please check your API keys and try again.</div>
+                `;
+            }
+        };
+    </script>
+    
     <script>
         // Matrix rain effect
         const canvas = document.getElementById('matrixCanvas');
@@ -527,7 +285,6 @@
         
         setInterval(drawMatrix, 50);
         
-        // Resize canvas on window resize
         window.addEventListener('resize', () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
@@ -570,6 +327,9 @@
             updateStatus('congress', 'CONNECTING...');
             
             try {
+                // Store API key for LocalityService to use
+                process.env.REACT_APP_CONGRESS_API_KEY = apiKey;
+                
                 await new Promise(resolve => setTimeout(resolve, 2000));
                 
                 apiConnections.congress = true;
@@ -585,7 +345,7 @@
             }
         }
         
-        async function connectOpenStatesAPI() {
+        async function connectOpenStatesData() {
             const apiKey = document.getElementById('openStatesKey').value;
             if (!apiKey) {
                 logToTerminal('ERROR: OpenStates API key required');
@@ -624,13 +384,17 @@
             updateStatus('civic', 'CONNECTING...');
             
             try {
+                // Store API key for LocalityService to use
+                if (window.localityService) {
+                    window.localityService.civicApiKey = apiKey;
+                }
+                
                 await new Promise(resolve => setTimeout(resolve, 1000));
                 
                 apiConnections.civic = true;
                 updateStatus('civic', 'CONNECTED');
                 logToTerminal('Google Civic API connection established');
                 
-                loadCivicData();
                 updateMetrics();
                 
             } catch (error) {
@@ -651,7 +415,13 @@
             logToTerminal(`Setting geolocation lock: ${state.toUpperCase()} ${zipCode || ''}`);
             updateStatus('geo', 'ACTIVE');
             
-            loadGeoData(state, zipCode);
+            if (window.loadGeoData) {
+                window.loadGeoData(state, zipCode);
+            }
+            
+            if (window.loadCivicData && apiConnections.civic) {
+                window.loadCivicData();
+            }
         }
         
         function loadCongressData() {
@@ -671,76 +441,7 @@
                     div.className = 'data-stream data-flow';
                     div.textContent = `>>> ${item}`;
                     panel.appendChild(div);
-                }, index * 300);
-            });
-        }
-        
-        function loadOpenStatesData() {
-            const panel = document.getElementById('openStatesData');
-            const state = document.getElementById('stateSelect').value.toUpperCase();
-            const sampleData = [
-                `${state} HB-247: Education Funding Reform - COMMITTEE`,
-                `${state} SB-158: Healthcare Access Act - FLOOR VOTE`,
-                `${state} HB-392: Infrastructure Bill - PASSED HOUSE`,
-                `${state} SB-071: Environmental Protection - SIGNED`,
-                `${state} HB-485: Criminal Justice Reform - DEBATE`
-            ];
-            
-            panel.innerHTML = '';
-            sampleData.forEach((item, index) => {
-                setTimeout(() => {
-                    const div = document.createElement('div');
-                    div.className = 'data-stream data-flow';
-                    div.textContent = `>>> ${item}`;
-                    panel.appendChild(div);
                 }, index * 400);
-            });
-        }
-        
-        function loadCivicData() {
-            const panel = document.getElementById('civicData');
-            const sampleData = [
-                'Next Election: November 5, 2024 - General Election',
-                'Polling Locations: 847 active sites in district',
-                'Voter Registration: 89% eligible population registered',
-                'Ballot Initiatives: 4 measures on upcoming ballot',
-                'Early Voting: Begins October 15, 2024'
-            ];
-            
-            panel.innerHTML = '';
-            sampleData.forEach((item, index) => {
-                setTimeout(() => {
-                    const div = document.createElement('div');
-                    div.className = 'data-stream data-flow';
-                    div.textContent = `>>> ${item}`;
-                    panel.appendChild(div);
-                }, index * 500);
-            });
-        }
-        
-        function loadGeoData(state, zipCode) {
-            const panel = document.getElementById('geoData');
-            const stateUpper = state.toUpperCase();
-            const sampleData = [
-                `State Legislature: ${stateUpper} - ${Math.floor(Math.random() * 50) + 100} members`,
-                `State Senator: Jane Smith (D) - District ${Math.floor(Math.random() * 20) + 1}`,
-                `State Rep: John Doe (R) - District ${Math.floor(Math.random() * 50) + 1}`,
-                `Legislative Session: ${new Date().getFullYear()} Regular Session ACTIVE`,
-                `Committee Meetings: ${Math.floor(Math.random() * 15) + 5} scheduled this week`
-            ];
-            
-            if (zipCode) {
-                sampleData.unshift(`ZIP: ${zipCode} -> ${stateUpper} Legislative District ${Math.floor(Math.random() * 30) + 1}`);
-            }
-            
-            panel.innerHTML = '';
-            sampleData.forEach((item, index) => {
-                setTimeout(() => {
-                    const div = document.createElement('div');
-                    div.className = 'data-stream data-flow';
-                    div.textContent = `>>> ${item}`;
-                    panel.appendChild(div);
-                }, index * 300);
             });
         }
         
@@ -777,4 +478,26 @@
         }, 1000);
     </script>
 </body>
-</html>
+</html>textContent = `>>> ${item}`;
+                    panel.appendChild(div);
+                }, index * 300);
+            });
+        }
+        
+        function loadOpenStatesData() {
+            const panel = document.getElementById('openStatesData');
+            const state = document.getElementById('stateSelect').value.toUpperCase();
+            const sampleData = [
+                `${state} HB-247: Education Funding Reform - COMMITTEE`,
+                `${state} SB-158: Healthcare Access Act - FLOOR VOTE`,
+                `${state} HB-392: Infrastructure Bill - PASSED HOUSE`,
+                `${state} SB-071: Environmental Protection - SIGNED`,
+                `${state} HB-485: Criminal Justice Reform - DEBATE`
+            ];
+            
+            panel.innerHTML = '';
+            sampleData.forEach((item, index) => {
+                setTimeout(() => {
+                    const div = document.createElement('div');
+                    div.className = 'data-stream data-flow';
+                    div.

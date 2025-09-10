@@ -1,6 +1,5 @@
 import axios from 'axios';
-import congressAPI from '../Components/CongressGovAPI';
-import googleCivicDataAPI from '../Components/GoogleCivicDataAPI';
+import congressAPI from './CongressGovAPI';
 
 class LocalityService {
   constructor() {
@@ -14,7 +13,7 @@ class LocalityService {
   // Extract Civic API logic into a service method
   async getCivicData(address) {
     try {
-      const endpoint = `https://civicinfo.googleapis.com/civicinfo/v2/representatives?address=${address}&key=${this.civicApiKey}`;
+      const endpoint = `https://civicinfo.googleapis.com/civicinfo/v2/representatives?address=${encodeURIComponent(address)}&key=${this.civicApiKey}`;
       const response = await axios.get(endpoint);
       return response.data;
     } catch (error) {
@@ -209,4 +208,4 @@ class LocalityService {
 
 // Export a singleton instance
 const localityService = new LocalityService();
-export default localityService;v
+export default localityService;
